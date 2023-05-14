@@ -6,6 +6,7 @@ locals {
     India     = "api.app.coralogix.in"
     Singapore = "api.coralogixsg.com"
     US        = "api.coralogix.us"
+    Custom    = var.CustomDomain
   }
   tags = {
     Provider = "Coralogix"
