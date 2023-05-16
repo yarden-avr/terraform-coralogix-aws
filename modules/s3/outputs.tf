@@ -17,3 +17,8 @@ output "lambda_role_name" {
   description = "The name of the IAM role created for the Lambda Function"
   value       = module.lambda.lambda_role_name
 }
+
+  output "custom_url" { #here
+  description = "The custom_url? for the Lambda Function"
+  value       = var.CustomDomain
+}

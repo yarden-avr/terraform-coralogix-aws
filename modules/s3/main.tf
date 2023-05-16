@@ -6,7 +6,7 @@ locals {
     India     = "api.app.coralogix.in"
     Singapore = "api.coralogixsg.com"
     US        = "api.coralogix.us"
-    Custom    = var.CustomDomain
+    Custom    = var.CustomDomain #here
   }
   tags = {
     Provider = "Coralogix"
@@ -38,8 +38,12 @@ module "lambda" {
   timeout                = var.timeout
   create_package         = false
   destination_on_failure = aws_sns_topic.this.arn
-  environment_variables = {
-    CORALOGIX_URL         = "https://${lookup(local.coralogix_regions, var.coralogix_region, "Europe")}/api/v1/logs"
+  environment_variables = { 
+    /*
+    lambda_function_arn = var.SSM_enable == "True" ? module.lambdaSSM.lambda_function_arn : module.lambda.lambda_function_arn
+    CORALOGIX_URL         = if var.CustomDomain is empty/no then do "https://${lookup(local.coralogix_regions, var.coralogix_region, "Europe")}/api/v1/logs" other use var.CustomDomain #change
+    */
+    CORALOGIX_URL         = var.CustomDomain == "" ? "https://${lookup(local.coralogix_regions, var.coralogix_region, "Europe")}/api/v1/logs" : var.CustomDomain
     CORALOGIX_BUFFER_SIZE = tostring(var.buffer_size)
     private_key           = var.private_key
     app_name              = var.application_name
@@ -48,6 +52,7 @@ module "lambda" {
     blocking_pattern      = var.blocking_pattern
     sampling              = tostring(var.sampling_rate)
     debug                 = tostring(var.debug)
+    #custom_url            = var.CustomDomain #here delete
   }
   s3_existing_package = {
     bucket = "coralogix-serverless-repo-${data.aws_region.this.name}"

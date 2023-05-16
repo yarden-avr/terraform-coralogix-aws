@@ -1,11 +1,14 @@
-variable "coralogix_region" {
+variable "coralogix_region" { #here
   description = "The Coralogix location region, possible options are [Europe, Europe2, India, Singapore, US]"
   type        = string
-  condition     = contains(["Europe", "Europe2", "India", "Singapore", "US", "Custom"], var.CoralogixRegion)
+  validation {
+    condition     = contains(["Europe", "Europe2", "India", "Singapore", "US", "Custom"], var.coralogix_region)
+    error_message = "The coralogix region must be one of these values: [Europe, Europe2, India, Singapore, US, Custom]."
+  }
   default     = "Europe"
 }
 
-variable "CustomDomain" {
+variable "CustomDomain" { #here
   description = "Your Custom URL for the Coralogix account. Ignore unless you have a custom URL. Just the FQDN, not the whole URL."
   type        = string
   default     = "ingress.customsubdomain.coralogix.com"
